@@ -1,0 +1,14 @@
+{
+  "name": "code-navigation-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for intelligent code navigation and dependency analysis",
+  "main": "server.py",
+  "scripts": {
+    "start": "python server.py",
+    "docker:build": "docker build -t code-navigation-mcp .",
+    "docker:run": "docker run -p 8080:8080 -v $(pwd):/workspace:ro code-navigation-mcp"
+  },
+  "keywords": ["mcp", "code-navigation", "python", "ast", "dependencies"],
+  "author": "",
+  "license": "MIT"
+}

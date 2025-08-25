@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  code-navigation-mcp:
+    build: .
+    container_name: code-navigation-mcp-server
+    ports:
+      - "8080:8080"
+    volumes:
+      # Mount the directory you want to analyze
+      - ./workspace:/workspace:ro
+      # For analyzing current directory
+      # - .:/workspace:ro
+    environment:
+      - MCP_MODE=server
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app
+    restart: unless-stopped
+    
+    # For interactive mode (stdio)
+    stdin_open: true
+    tty: true

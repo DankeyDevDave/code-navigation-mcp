@@ -1,0 +1,92 @@
+// package.json
+{
+  "name": "code-navigation-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for code navigation and dependency analysis",
+  "main": "server.py",
+  "scripts": {
+    "start": "python server.py"
+  },
+  "mcp": {
+    "name": "Code Navigation",
+    "description": "Analyzes code structure, tracks dependencies and finds usages",
+    "tools": [
+      {
+        "name": "get_code_dependencies",
+        "description": "Find all dependencies for a function, class, or module"
+      },
+      {
+        "name": "find_code_usages",
+        "description": "Find all usages of a function, class, or variable"
+      },
+      {
+        "name": "analyze_file_structure",
+        "description": "Get the complete structure of a Python file"
+      }
+    ]
+  }
+}
+
+// requirements.txt
+mcp>=0.1.0
+typing-extensions>=4.0.0
+
+// pyproject.toml
+[project]
+name = "code-navigation-mcp"
+version = "1.0.0"
+description = "MCP server for code navigation and dependency analysis"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "mcp>=0.1.0",
+    "typing-extensions>=4.0.0"
+]
+
+[project.scripts]
+code-navigation = "server:main"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+// MCP client configuration (claude_desktop_config.json)
+{
+  "mcpServers": {
+    "code-navigation": {
+      "command": "python",
+      "args": ["/path/to/code-navigation-mcp/server.py"],
+      "env": {
+        "PYTHONPATH": "/path/to/code-navigation-mcp"
+      }
+    }
+  }
+}
+
+// Docker configuration (Dockerfile)
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY server.py .
+
+EXPOSE 8080
+
+CMD ["python", "server.py"]
+
+// docker-compose.yml
+version: '3.8'
+
+services:
+  code-navigation:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./workspace:/workspace:ro  # Mount code to analyze
+    environment:
+      - MCP_MODE=server
+      - LOG_LEVEL=INFO
